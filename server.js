@@ -37,20 +37,3 @@ wss.on('connection', (ws, req) => {
       doc.content = msg.content;
 
       // Broadcast to all other clients in same document
-      for (const client of doc.clients) {
-        if (client !== ws && client.readyState === ws.OPEN) {
-          client.send(JSON.stringify({ type: 'update', content: doc.content }));
-        }
-      }
-    }
-  });
-
-  ws.on('close', () => {
-    doc.clients.delete(ws);
-    // Optional cleanup for empty docs
-    if (doc.clients.size === 0 && doc.content === '') {
-      docs.delete(docId);
-    }
-  });
-});
-
